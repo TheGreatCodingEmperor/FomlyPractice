@@ -11,10 +11,13 @@ import { DynamicComponentService } from '../dynamic-component.service';
 })
 export class BComponent extends TemplateComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
+    super.ngAfterViewInit();
+    console.log('after');
     this.cdref.detectChanges();
   }
 
   ngOnInit() {
+    console.log('init');
     if (this.style) {
     this.hostStyle = this.doms.bypassSecurityTrustStyle(this.style);
       console.log('host');

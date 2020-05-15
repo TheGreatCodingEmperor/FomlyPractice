@@ -1,4 +1,17 @@
 
+
+<div class="print" style="width:500px;height: 20px;">
+    <div style="display: flex;">
+        <div style="width:inherit;z-index: 10;position: relative;">
+            <div style="width:18px;height: 20px;background-color: black;position: absolute;" [style.left]="value">
+            </div>
+        </div>
+        <div style="width:20%;height: 20px;background-color: #e4018d;"></div>
+        <div style="width:40%;height: 20px;background-color: #ffba01;"></div>
+        <div style="width:40%;height: 20px;background-color:#00b395;"></div>
+    </div>
+</div>
+<input type="text" [(ngModel)]="value">
 <div [formGroup]="form">
     <ng-container #formly *ngFor="let item of struct;"></ng-container>
     <!-- <app-dynamic-component *ngFor="let item of struct"  [component]="item.type"></app-dynamic-component> -->
@@ -6,13 +19,13 @@
 {{form.value|json}}
 <ng-container app-counter-component></ng-container>
 <table>
-    <tr >
+    <tr>
         <th style="border: solid;" *ngFor="let key of keys()">{{key}}</th>
     </tr>
     <tr style="border: solid;">
         <td style="border: solid;" *ngFor="let value of values()">{{value}}</td>
     </tr>
 </table>
-<textarea #st [ngModel]="struct | json" style="width: 90%;min-height: 300px;"></textarea>
+<textarea #st [ngModel]="struct | json" style="width: 50%;min-height: 300px;"></textarea>
 <button (click)="structChange(st)">save</button>
 {{struct | json}}

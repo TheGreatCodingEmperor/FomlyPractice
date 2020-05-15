@@ -53,14 +53,12 @@ export class DynamicComponentService {
     viewContainerRef.clear();
     console.log('clear');
     const componentRef = viewContainerRef.createComponent(componentFactory);
-
     //component attribute fomrcontrol
     componentRef.instance['form'] = form.get(formlyStruct.key);
     componentRef.instance['group'] = formlyStruct.group;
     componentRef.instance['formGroup'] = form;
     componentRef.instance['style'] = formlyStruct.style;
-
-    componentRef.changeDetectorRef.detectChanges();
+      componentRef.changeDetectorRef.detectChanges();
   }
 
   buildGroup(formlyStruct:FormlyStruct[]){
@@ -74,6 +72,7 @@ export class DynamicComponentService {
   }
 
   buildForm(formlyStruct:FormlyStruct[],containers:QueryList<ViewContainerRef>,form:FormGroup){
+    if(!formlyStruct)return;
     let n = formlyStruct.length;
     for (let i = 0; i < n; i++) {
       this.displayComponent(containers.toArray()[i], formlyStruct[i], form);

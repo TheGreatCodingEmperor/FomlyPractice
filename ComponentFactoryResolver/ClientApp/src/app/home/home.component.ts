@@ -13,6 +13,7 @@ export class HomeComponent implements AfterViewInit {
   // @ViewChild('container', <any>{ read: ViewContainerRef, static: true }) dynamicComponent: ViewContainerRef;
   @ViewChildren('formly', <any>{ read: ViewContainerRef, static: true }) containers: QueryList<ViewContainerRef>;
   form: FormGroup;
+  value:'50';
   formControl: AbstractControl;
   group = {};
   struct: FormlyStruct[] = [
@@ -127,8 +128,14 @@ export class HomeComponent implements AfterViewInit {
     this.cdref.detectChanges();
   }
 
-  buildGroup(keys: object) {
-    return this.formBuilder.group(keys);
+
+  get locate(){
+    if(this.form)
+    {let value = this.form.get('name');
+    console.log('debug vallue');
+    console.log(value);
+    return `${eval(`500 * ${value}`)}px`;}
+    return "";
   }
 
   getFormControl(key: string) {
@@ -146,6 +153,12 @@ export class HomeComponent implements AfterViewInit {
   structChange(event) {
     console.log(event.value);
     this.struct = JSON.parse(event.value);
+    let n = this.containers.length;
+    for(let item of this.containers.toArray()){
+      item.clear();
+    }
+    this.dinamicService.buildGroup(this.struct);
+    this.dinamicService.buildForm(this.struct,this.containers,this.form);
     console.log(this.struct);
   }
 }

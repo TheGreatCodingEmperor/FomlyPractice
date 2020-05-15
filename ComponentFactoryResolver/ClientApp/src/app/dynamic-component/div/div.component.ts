@@ -9,7 +9,7 @@ import { DynamicComponentService } from '../dynamic-component.service';
   `,
   styleUrls: ['./div.component.css']
 })
-export class DivComponent extends TemplateComponent implements OnInit {
+export class DivComponent extends TemplateComponent implements OnInit,AfterViewInit {
   ngOnInit() {
     this.containers = this.containers;
     console.log('debug div');
@@ -18,6 +18,9 @@ export class DivComponent extends TemplateComponent implements OnInit {
     {this.hostStyle = this.doms.bypassSecurityTrustStyle(this.style);
       console.log('host');
     console.log(this.hostStyle)}
+  }
+  ngAfterViewInit(){
+    super.ngAfterViewInit();
   }
 
 }

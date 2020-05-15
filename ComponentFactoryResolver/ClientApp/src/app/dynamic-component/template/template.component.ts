@@ -9,7 +9,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   // styleUrls: ['./template.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TemplateComponent implements AfterViewInit,AfterContentChecked,OnInit,OnDestroy{
+export class TemplateComponent implements AfterViewInit,AfterContentChecked,OnInit,OnChanges{
   @HostBinding('style') hostStyle;
   @ViewChildren('container', <any>{ read: ViewContainerRef,  static: false }) containers: QueryList<ViewContainerRef>;
   @Input() form:FormControl;
@@ -28,11 +28,12 @@ export class TemplateComponent implements AfterViewInit,AfterContentChecked,OnIn
     this.cdref.detectChanges();
   }
 
-  ngOnDestroy(){
-    console.log('destroy');
-  }
+  // ngOnDestroy(){
+  //   console.log('destroy');
+  // }
 
   ngOnInit(){
+    console.log('init');
     if(this.style)
     {this.hostStyle = this.doms.bypassSecurityTrustStyle(this.style);
       console.log('host');
@@ -40,6 +41,14 @@ export class TemplateComponent implements AfterViewInit,AfterContentChecked,OnIn
   }
 
   ngAfterViewInit(){
+    console.log('build form');
+    this.dynamicService.buildForm(this.group,this.containers,this.formGroup);
+    setTimeout(() => {
+      this.cdref.detectChanges();
+    }, 1);
+  }
+  ngOnChanges(){
+    console.log('change');
     this.dynamicService.buildForm(this.group,this.containers,this.formGroup);
     setTimeout(() => {
       this.cdref.detectChanges();

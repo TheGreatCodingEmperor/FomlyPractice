@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, AfterViewChecked, AfterViewInit } from '@angular/core';
 import { TemplateComponent } from '../template/template.component';
 import { DynamicComponentService } from '../dynamic-component.service';
 
@@ -9,7 +9,7 @@ import { DynamicComponentService } from '../dynamic-component.service';
   `,
   styleUrls: ['./a.component.css']
 })
-export class AComponent extends TemplateComponent implements OnInit {
+export class AComponent extends TemplateComponent implements OnInit,AfterViewInit {
 
 
   ngOnInit() {
@@ -17,6 +17,9 @@ export class AComponent extends TemplateComponent implements OnInit {
     {this.hostStyle = this.doms.bypassSecurityTrustStyle(this.style);
       console.log('host');
     console.log(this.hostStyle)}
+  }
+  ngAfterContentChecked(){
+    super.ngAfterViewInit();
   }
 
 }
