@@ -11,7 +11,7 @@
         <div style="width:40%;height: 20px;background-color:#00b395;"></div>
     </div>
 </div>
-<input type="text" [(ngModel)]="value">
+<!-- <input type="text" [(ngModel)]="value"> -->
 <div [formGroup]="form">
     <ng-container #formly *ngFor="let item of struct;"></ng-container>
     <!-- <app-dynamic-component *ngFor="let item of struct"  [component]="item.type"></app-dynamic-component> -->
@@ -29,3 +29,4 @@
 <textarea #st [ngModel]="struct | json" style="width: 50%;min-height: 300px;"></textarea>
 <button (click)="structChange(st)">save</button>
 {{struct | json}}
+<button (click)="insert()">insert</button>

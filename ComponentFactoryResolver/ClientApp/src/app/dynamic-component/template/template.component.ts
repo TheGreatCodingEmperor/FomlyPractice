@@ -38,21 +38,26 @@ export class TemplateComponent implements AfterViewInit,AfterContentChecked,OnIn
     {this.hostStyle = this.doms.bypassSecurityTrustStyle(this.style);
       console.log('host');
     console.log(this.hostStyle)}
+    // setTimeout(() => {
+    // this.dynamicService.buildForm(this.group,this.containers,this.formGroup);
+      
+    // }, 1);
   }
 
   ngAfterViewInit(){
     console.log('build form');
     this.dynamicService.buildForm(this.group,this.containers,this.formGroup);
-    setTimeout(() => {
+    // setTimeout(() => {
       this.cdref.detectChanges();
-    }, 1);
+    // }, 1);
   }
+
   ngOnChanges(){
     console.log('change');
     this.dynamicService.buildForm(this.group,this.containers,this.formGroup);
-    setTimeout(() => {
-      this.cdref.detectChanges();
-    }, 1);
+    // setTimeout(() => {
+    //   this.cdref.detectChanges();
+    // }, 1);
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, ViewChild, ViewContainerRef, ViewChildren, QueryList, AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ComponentFactoryResolver, ViewChild, ViewContainerRef, ViewChildren, QueryList, AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { DynamicComponentDirective } from '../dynamic-component/dynamic-component.directive';
 import { DynamicComponentService, FormlyStruct } from '../dynamic-component/dynamic-component.service';
 import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
@@ -8,7 +8,7 @@ import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from
   templateUrl: './home.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent implements AfterViewInit,OnInit {
   selectedComponentName: string;
   // @ViewChild('container', <any>{ read: ViewContainerRef, static: true }) dynamicComponent: ViewContainerRef;
   @ViewChildren('formly', <any>{ read: ViewContainerRef, static: true }) containers: QueryList<ViewContainerRef>;
@@ -16,7 +16,7 @@ export class HomeComponent implements AfterViewInit {
   value:'50';
   formControl: AbstractControl;
   group = {};
-  struct: FormlyStruct[] = [
+  struct: FormlyStruct[] =  [
     {
       id: 'div',
       type: 'div',
@@ -120,12 +120,20 @@ export class HomeComponent implements AfterViewInit {
     private formBuilder: FormBuilder,
     private cdref: ChangeDetectorRef
   ) {
-    this.form = this.dinamicService.buildGroup(this.struct);
+   
+  }
+
+  ngOnInit(){
+     this.form = this.dinamicService.buildGroup(this.struct);
+     setTimeout(() => {
+        this.dinamicService.buildForm(this.struct, this.containers, this.form);
+     }, 1);
+   
   }
 
   ngAfterViewInit() {
-    this.dinamicService.buildForm(this.struct, this.containers, this.form);
-    this.cdref.detectChanges();
+    
+    // this.cdref.detectChanges();
   }
 
 
@@ -153,12 +161,20 @@ export class HomeComponent implements AfterViewInit {
   structChange(event) {
     console.log(event.value);
     this.struct = JSON.parse(event.value);
-    let n = this.containers.length;
-    for(let item of this.containers.toArray()){
-      item.clear();
-    }
-    this.dinamicService.buildGroup(this.struct);
-    this.dinamicService.buildForm(this.struct,this.containers,this.form);
+    
+    this.form = this.dinamicService.buildGroup(this.struct);
+    setTimeout(() => {
+      this.dinamicService.buildForm(this.struct,this.containers,this.form,this.cdref);
+    }, 1);
     console.log(this.struct);
+  }
+
+  insert(){
+    let vcr = this.containers.toArray()[0];
+    vcr.clear();
+    let component = this.dinamicService.getComponent('a');
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(
+      component);
+    vcr.createComponent(componentFactory);
   }
 }

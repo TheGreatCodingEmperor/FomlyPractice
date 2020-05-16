@@ -12,8 +12,8 @@ import { DynamicComponentService } from '../dynamic-component.service';
 export class BComponent extends TemplateComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     super.ngAfterViewInit();
-    console.log('after');
-    this.cdref.detectChanges();
+    // console.log('after');
+    // this.cdref.detectChanges();
   }
 
   ngOnInit() {

@@ -42,6 +42,8 @@ export class DynamicComponentService {
   }
 
   displayComponent(container: ViewContainerRef, formlyStruct: FormlyStruct, form: FormGroup) {
+    console.log('container');
+    console.log(container);
     //component(編譯)
     let component = this.getComponent(formlyStruct.type);
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(
@@ -52,13 +54,17 @@ export class DynamicComponentService {
 
     viewContainerRef.clear();
     console.log('clear');
-    const componentRef = viewContainerRef.createComponent(componentFactory);
+
+    setTimeout(() => {
+      const componentRef = viewContainerRef.createComponent(componentFactory);
+      console.log(componentRef);
     //component attribute fomrcontrol
     componentRef.instance['form'] = form.get(formlyStruct.key);
     componentRef.instance['group'] = formlyStruct.group;
     componentRef.instance['formGroup'] = form;
     componentRef.instance['style'] = formlyStruct.style;
-      componentRef.changeDetectorRef.detectChanges();
+    componentRef.changeDetectorRef.detectChanges();
+    }, 10);
   }
 
   buildGroup(formlyStruct:FormlyStruct[]){
@@ -71,11 +77,16 @@ export class DynamicComponentService {
     return this.formBuilder.group(keys);
   }
 
-  buildForm(formlyStruct:FormlyStruct[],containers:QueryList<ViewContainerRef>,form:FormGroup){
+  buildForm(formlyStruct:FormlyStruct[],containers:QueryList<ViewContainerRef>,form:FormGroup,cdref?:ChangeDetectorRef){
     if(!formlyStruct)return;
     let n = formlyStruct.length;
     for (let i = 0; i < n; i++) {
       this.displayComponent(containers.toArray()[i], formlyStruct[i], form);
+    }
+    if(cdref&&!cdref['destroyed']){
+      setTimeout(() => {
+        cdref.detectChanges();
+      }, 1);
     }
   }
 }
