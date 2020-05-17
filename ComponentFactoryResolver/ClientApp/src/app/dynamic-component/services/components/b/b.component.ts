@@ -1,7 +1,16 @@
 import { Component, OnInit, Input, ChangeDetectorRef, OnChanges, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { TemplateComponent } from '../template/template.component';
-import { DynamicComponentService } from '../dynamic-component.service';
+export interface BAttributes{
+  className:string,
+  style:string,
+  type:string // text/number
+}
+export class BAttributes implements BAttributes{
+  className = '';
+  style = '';
+  type = 'text';
+}
 @Component({
   selector: '.app-b',
   template: `
@@ -17,19 +26,10 @@ export class BComponent extends TemplateComponent implements OnInit, AfterViewIn
   }
 
   ngOnInit() {
-    console.log('init');
-    if (this.style) {
-    this.hostStyle = this.doms.bypassSecurityTrustStyle(this.style);
-      console.log('host');
-      console.log(this.hostStyle)
-    }
   }
-  // getStyle(){
-  //   if(!this.style)return {};
-  //   let style = {};
-  //   let sp = this.style.split(';').map(i=>style[i.split(':')[0]]=i.split(':')[1]);
-  //   console.log(style);
-  //   return style?style:{};
-  // }
+
+  setAttributes(){
+
+  }
 
 }

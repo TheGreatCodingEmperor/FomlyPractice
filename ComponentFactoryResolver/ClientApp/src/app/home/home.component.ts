@@ -1,6 +1,6 @@
 import { Component, ComponentFactoryResolver, ViewChild, ViewContainerRef, ViewChildren, QueryList, AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { DynamicComponentDirective } from '../dynamic-component/dynamic-component.directive';
-import { DynamicComponentService, FormlyStruct } from '../dynamic-component/dynamic-component.service';
+import { DynamicComponentService, FormlyStruct } from '../dynamic-component/services/dynamic-component.service';
 import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
 
 @Component({
@@ -11,42 +11,43 @@ import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from
 export class HomeComponent implements AfterViewInit,OnInit {
   selectedComponentName: string;
   // @ViewChild('container', <any>{ read: ViewContainerRef, static: true }) dynamicComponent: ViewContainerRef;
-  @ViewChildren('formly', <any>{ read: ViewContainerRef, static: true }) containers: QueryList<ViewContainerRef>;
-  form: FormGroup;
-  value:'50';
-  formControl: AbstractControl;
-  group = {};
+  @ViewChildren('formly', <any>{ read: ViewContainerRef, statnpmic: true }) containers: QueryList<ViewContainerRef>;
+  form: FormGroup=new FormGroup({});
+  value:'50px';
   struct: FormlyStruct[] =  [
     {
       id: 'div',
-      type: 'div',
-      key: 'div',
+      component: 'div',
+      key: null,
       formControl: null,
       group: [
         {
           id: 'table',
-          type: 'table',
+          component: 'table',
           key: 'table',
           style: '',
           formControl: null,
           group: [
             {
               id: 'tr1',
-              type: 'tr',
+              component: 'tr',
               key: 'tr',
               style: '',
               formControl: null,
               group: [
                 {
                   id: 'td1',
-                  type: 'td',
+                  component: 'td',
                   key: '',
                   formControl: null,
                   style: 'background-color:pink;',
+                  attributes:{
+                    colspan:"2"
+                  },
                   group: [
                     {
                       id: 'b',
-                      type: 'b',
+                      component: 'checkbox',
                       key: 'name',
                       style:'background-color:pink;',
                       formControl: null
@@ -55,14 +56,14 @@ export class HomeComponent implements AfterViewInit,OnInit {
                 },
                 {
                   id: 'td2',
-                  type: 'td',
+                  component: 'td',
                   key: '',
                   style: 'border:solid;',
                   formControl: null,
                   group: [
                     {
                       id: 'a',
-                      type: 'a',
+                      component: 'a',
                       key: 'email',
                       style:'background-color:pink;',
                       formControl: null
@@ -73,21 +74,21 @@ export class HomeComponent implements AfterViewInit,OnInit {
             },
             {
               id: 'tr2',
-              type: 'tr',
+              component: 'tr',
               key: '',
               style: 'border:solid;',
               formControl: null,
               group: [
                 {
                   id: 'td21',
-                  type: 'td',
+                  component: 'td',
                   key: '',
                   style:'background-color:pink;',
                   formControl: null,
                   group: [
                     {
                       id: 'b2',
-                      type: 'b',
+                      component: 'b',
                       key: 'name2',
                       formControl: null
                     }
@@ -95,13 +96,13 @@ export class HomeComponent implements AfterViewInit,OnInit {
                 },
                 {
                   id: 'td22',
-                  type: 'td',
+                  component: 'td',
                   key: '',
                   formControl: null,
                   group: [
                     {
                       id: 'c',
-                      type: 'c',
+                      component: 'c',
                       key: 'bool',
                       style:'background-color:pink;',
                       formControl: null,
@@ -124,11 +125,9 @@ export class HomeComponent implements AfterViewInit,OnInit {
   }
 
   ngOnInit(){
-     this.form = this.dinamicService.buildGroup(this.struct);
-     setTimeout(() => {
-        this.dinamicService.buildForm(this.struct, this.containers, this.form);
-     }, 1);
-   
+    setTimeout(() => {
+      this.form = this.dinamicService.build(this.form,this.struct,this.containers,this.cdref);
+    }, 1);
   }
 
   ngAfterViewInit() {
@@ -159,14 +158,9 @@ export class HomeComponent implements AfterViewInit,OnInit {
   }
 
   structChange(event) {
-    console.log(event.value);
     this.struct = JSON.parse(event.value);
     
-    this.form = this.dinamicService.buildGroup(this.struct);
-    setTimeout(() => {
-      this.dinamicService.buildForm(this.struct,this.containers,this.form,this.cdref);
-    }, 1);
-    console.log(this.struct);
+    this.form = this.dinamicService.build(this.form,this.struct,this.containers,this.cdref);
   }
 
   insert(){

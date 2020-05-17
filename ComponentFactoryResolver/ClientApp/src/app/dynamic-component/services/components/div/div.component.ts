@@ -1,7 +1,8 @@
 import { Component, OnInit, AfterViewInit, ChangeDetectorRef, ViewChildren, ViewContainerRef, QueryList, Input } from '@angular/core';
 import { TemplateComponent } from '../template/template.component';
-import { DynamicComponentService } from '../dynamic-component.service';
-
+export interface DivAttributes{
+  
+}
 @Component({
   selector: 'div.app-div',
   template:`
@@ -22,5 +23,7 @@ export class DivComponent extends TemplateComponent implements OnInit,AfterViewI
   ngAfterViewInit(){
     super.ngAfterViewInit();
   }
-
+  setAttributes(){
+    
+  }
 }

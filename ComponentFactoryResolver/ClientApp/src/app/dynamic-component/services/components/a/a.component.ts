@@ -1,24 +1,27 @@
 import { Component, OnInit, ChangeDetectorRef, AfterViewChecked, AfterViewInit } from '@angular/core';
 import { TemplateComponent } from '../template/template.component';
-import { DynamicComponentService } from '../dynamic-component.service';
 
 @Component({
-  selector: '.app-c',
+  selector: '.app-a',
   template:`
-    <input type="checkbox" [(ngModel)]="value" [formControl]="form"/>
+    <input type="radio" value="hello" [formControl]="form"/>
   `,
-  styleUrls: ['./c.component.css']
+  styleUrls: ['./a.component.css']
 })
+export class AComponent extends TemplateComponent implements OnInit,AfterViewInit {
 
-export class CComponent extends TemplateComponent implements OnInit,AfterViewInit {
-  value=false;
-  ngOnInit(){
+
+  ngOnInit() {
     if(this.style)
     {this.hostStyle = this.doms.bypassSecurityTrustStyle(this.style);
       console.log('host');
     console.log(this.hostStyle)}
   }
-  ngAfterViewInit(){
+  ngAfterContentChecked(){
     super.ngAfterViewInit();
   }
+  setAttributes(){
+    
+  }
+
 }

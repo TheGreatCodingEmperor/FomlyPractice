@@ -3,34 +3,51 @@ import { CommonModule } from '@angular/common';
 
 import { DynamicComponentRoutingModule } from './dynamic-component-routing.module';
 import { DynamicComponentDirective } from './dynamic-component.directive';
-import { AComponent } from './a/a.component';
-import { BComponent } from './b/b.component';
-import { CComponent } from './c/c.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DynamicComponentComponent } from './dynamic-component/dynamic-component.component';
-import { TemplateComponent } from './template/template.component';
-import { DivComponent } from './div/div.component';
-import { TrComponent } from './tr/tr.component';
-import { TdComponent } from './td/td.component';
-import { TableComponent } from './table/table.component';
+import { AComponent } from './services/components/a/a.component';
+import { BComponent } from './services/components/b/b.component';
+import { CComponent } from './services/components/c/c.component';
+import { DivComponent } from './services/components/div/div.component';
+import { TrComponent } from './services/components/tr/tr.component';
+import { TdComponent } from './services/components/td/td.component';
+import { TableComponent } from './services/components/table/table.component';
+import { CheckboxComponent } from './services/components/checkbox/checkbox.component';
+import { SharedModule } from '../shared/shared.module';
+import { StoreService } from './services/store.service';
 
 
 @NgModule({
-  declarations: [DynamicComponentDirective, AComponent, BComponent, CComponent, DynamicComponentComponent, TemplateComponent, DivComponent, TrComponent, TdComponent, TableComponent],
+  declarations: [
+    DynamicComponentDirective, 
+    AComponent, 
+    BComponent, 
+    CComponent, 
+    DynamicComponentComponent,
+    DivComponent, 
+    TrComponent, 
+    TdComponent, 
+    TableComponent, 
+    CheckboxComponent
+  ],
   imports: [
     ReactiveFormsModule,
     CommonModule,
-    DynamicComponentRoutingModule
+    DynamicComponentRoutingModule,
+    SharedModule,
   ],
-  entryComponents:[
+  entryComponents:
+  [
     AComponent,
     BComponent,
     CComponent,
     DivComponent,
     TrComponent,
     TdComponent,
-    TableComponent
-  ],
+    TableComponent,
+    CheckboxComponent
+  ]
+  ,
   exports:[
     DynamicComponentComponent
   ]

@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, Renderer, ElementRef, HostBinding } from '@angular/core';
 import { TemplateComponent } from '../template/template.component';
-import { DynamicComponentService } from '../dynamic-component.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgStyle } from '@angular/common';
 
@@ -21,5 +20,9 @@ export class TableComponent extends TemplateComponent implements OnInit {
     {this.hostStyle = this.doms.bypassSecurityTrustStyle(this.style);
       console.log('host');
     console.log(this.hostStyle)}
+  }
+
+  setAttributes(){
+    
   }
 }

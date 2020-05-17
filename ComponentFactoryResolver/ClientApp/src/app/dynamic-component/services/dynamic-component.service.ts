@@ -1,51 +1,45 @@
 import { Injectable, ViewContainerRef, ComponentFactoryResolver, ChangeDetectorRef, Component, Injector, ComponentFactory, QueryList } from '@angular/core';
-import { AComponent } from './a/a.component';
-import { BComponent } from './b/b.component';
-import { CComponent } from './c/c.component';
 import { AbstractControl, FormGroup, FormBuilder } from '@angular/forms';
-import { DivComponent } from './div/div.component';
-import { TemplateComponent } from './template/template.component';
-import { TdComponent } from './td/td.component';
-import { TrComponent } from './tr/tr.component';
-import { TableComponent } from './table/table.component';
+import { BehaviorSubject } from 'rxjs';
+import { StoreService } from './store.service';
+import { FormStyle } from '@angular/common';
 export interface FormlyStruct {
-  id: string,
-  type: string,
-  key: string,
-  formControl: AbstractControl,
-  group?: FormlyStruct[],
-  style?: string
+  id: string,//html id
+  component: string,//component name
+  key: string,//form control name
+  formControl: AbstractControl,//form controll
+  group?: FormlyStruct[],//child components
+  style?: string//component styles
+  className?:string//component css classes
+  attributes?:object//component attributes
+}
+export interface IDynamicComponent {
+  formlyStructs:FormlyStruct[],
+  containers:QueryList<ViewContainerRef>,
+  formGroup?:FormGroup,
+  cdref?:ChangeDetectorRef
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class DynamicComponentService {
-  private components = {
-    a: AComponent,
-    b: BComponent,
-    c: CComponent,
-    div: DivComponent,
-    tr: TrComponent,
-    td: TdComponent,
-    table: TableComponent
-  }
+  attributesTrigger:BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   constructor(
+    private storeService:StoreService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private formBuilder: FormBuilder
   ) { }
 
   getComponent(name: string) {
-    console.log(name);
-    return this.components[name];
+    // console.log(name);
+    return this.storeService.getComponent(name);
   }
 
   displayComponent(container: ViewContainerRef, formlyStruct: FormlyStruct, form: FormGroup) {
-    console.log('container');
-    console.log(container);
     //component(編譯)
-    let component = this.getComponent(formlyStruct.type);
+    let component = this.getComponent(formlyStruct.component);
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(
       component);
 
@@ -53,22 +47,24 @@ export class DynamicComponentService {
     const viewContainerRef = container;
 
     viewContainerRef.clear();
-    console.log('clear');
 
     setTimeout(() => {
       const componentRef = viewContainerRef.createComponent(componentFactory);
       console.log(componentRef);
     //component attribute fomrcontrol
+    componentRef.instance['component'] = formlyStruct.component;
     componentRef.instance['form'] = form.get(formlyStruct.key);
     componentRef.instance['group'] = formlyStruct.group;
     componentRef.instance['formGroup'] = form;
     componentRef.instance['style'] = formlyStruct.style;
+    componentRef.instance['className'] = formlyStruct.className;
+    componentRef.instance['attributes'] = formlyStruct.attributes;
     componentRef.changeDetectorRef.detectChanges();
     }, 10);
   }
 
   buildGroup(formlyStruct:FormlyStruct[]){
-    let keysArray = JSON.stringify(formlyStruct).match(/key":"[a-z,0-9]*/g).map(i => i.split(":")[1].replace('"', ''));
+    let keysArray = JSON.stringify(formlyStruct).match(/key":"[a-z,0-9]*/g).map(i => i.split(":")[1].replace('"', '')).filter(i => i!='');
     console.log(keysArray);
     let keys = {};
     for (let item of keysArray) {
@@ -88,5 +84,13 @@ export class DynamicComponentService {
         cdref.detectChanges();
       }, 1);
     }
+  }
+
+  build(formGroup:FormGroup,formlyStructs:FormlyStruct[],containers:QueryList<ViewContainerRef>,cdref?:ChangeDetectorRef){
+    formGroup = this.buildGroup(formlyStructs);
+    setTimeout(() => {
+      this.buildForm(formlyStructs,containers,formGroup,cdref);
+    }, 1);
+    return formGroup;
   }
 }
